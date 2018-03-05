@@ -8,3 +8,7 @@ static ip_address=192.168.1.100
 
 # restart networking
 sudo /etc/init.d/networking restart
+
+# restart eth0
+sudo ifconfig eth0 down
+sudo ifconfig eth0 up
