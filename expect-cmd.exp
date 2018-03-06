@@ -1,4 +1,5 @@
 #!/usr/bin/expect
+# expect is a type of scripts
 # sudo apt-get install expect
 # Login and don't need input passwd
 
