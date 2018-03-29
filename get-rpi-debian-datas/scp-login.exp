@@ -1,0 +1,10 @@
+#!/usr/bin/expect
+
+set timeout 20
+
+set ip_addr [lindex $argv 0]
+
+spawn scp factory@$ip_addr:/home/factory/xzx/miner-automate-test-scripts/read-miner-info/auto-system.sh ./
+
+expect "password:"
+send "123\r"
