@@ -4,7 +4,11 @@ set timeout 20
 
 set ip_addr [lindex $argv 0]
 
-spawn scp factory@$ip_addr:/home/factory/xzx/miner-automate-test-scripts/read-miner-info/auto-system.sh ./
+spawn scp -r pi@$ip_addr:/home/pi/miner-automate-test-scripts/read-miner-info/result* ./
 
 expect "password:"
-send "123\r"
+send "raspberry\r"
+
+expect {
+    \"Permission denied, please try again.\" exit
+}
