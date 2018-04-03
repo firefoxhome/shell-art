@@ -1,8 +1,9 @@
 #!/bin/bash
 # Get raspberry debian system datas
 
-for ip in `cat network.conf | awk 'NR > 1'`;
+for IP in `cat network.conf | awk 'NR > 1'`;
 do
-    echo "raspberry ip address = $ip"
-    ./scp-login.exp $ip
+    ssh-keygen -f "/home/xzx/.ssh/known_hosts" -R $IP
+    echo "raspberry ip address = $IP"
+    ./scp-login.exp $IP
 done
