@@ -5,5 +5,5 @@ for IP in `cat network.conf | awk 'NR > 1'`;
 do
     ssh-keygen -f "/home/xzx/.ssh/known_hosts" -R $IP
     echo "raspberry ip address = $IP"
-    ./scp-login.exp $IP
+    ./scp-login.exp $IP > /dev/null
 done
