@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create result.csv
-echo "Freq,Voltage,GHSmm,Temp,TMax,WU,GHSav,DH,Cout,Vo,Power" > miner-result.csv
+echo "Freq,Voltage,GHSmm,Temp,TMax,WU,GHSav,DH,Cout,Vo,Power,Power/GHSav" > miner-result.csv
 
 # Get raspberry IP address
 IP=`cat ip-freq-voltlevel-devid.config | sed -n '2p' | awk '{ print $1 }'`
@@ -33,6 +33,7 @@ do
 
     # SSH no password
     ./ssh-login.exp $IP cgminer-api "debug\|D" > /dev/null
+    sleep 1
     ./ssh-login.exp $IP cgminer-api estats estats.log > /dev/null
     ./ssh-login.exp $IP cgminer-api edevs edevs.log > /dev/null
     ./ssh-login.exp $IP cgminer-api summary summary.log > /dev/null

@@ -29,19 +29,23 @@ do
     cout=`cat $i.Cout`
     vo=`cat $i.V0`
     power=$(echo "scale=1;$vo * $cout / 1000 / 100" | bc)
-    #let power=vo*cout/1000/100*0.1
     echo $power > $i.Power
 
     # According to WU value, calculate GHSav.
     # Formula: ghsav = WU / 60 * 2^32 /10^9
     cat $i.WU | awk '{printf ("%.2f\n", ($1/60*2^32/10^9))}' > $i.GHSav
 
+    # Power ratio
+    ghsav=`cat $i.GHSav`
+    ph=$(echo "scale=3;$power / $ghsav" | bc)
+    echo $ph > ph.log
+
     Result=Results_$dirname
 
-    paste -d, freq.log voltage.log $i.GHSmm $i.Temp $i.TMax $i.WU $i.GHSav $i.DH $i.Cout $i.V0 $i.Power  > ${Result#.log}.csv
+    paste -d, freq.log voltage.log $i.GHSmm $i.Temp $i.TMax $i.WU $i.GHSav $i.DH $i.Cout $i.V0 $i.Power ph.log > ${Result#.log}.csv
     cat *.csv >> ../miner-result.csv
 
-    rm -rf $i.GHSmm $i.Temp $i.TMax $i.WU $i.GHSav $i.DH freq.log voltage.log $i.Cout $i.V0
+    rm -rf $i.GHSmm $i.Temp $i.TMax $i.WU $i.GHSav $i.DH freq.log voltage.log $i.Cout $i.V0 ph.log
 
     cd ..
     mv ./$dirname ./result*
