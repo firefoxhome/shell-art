@@ -14,6 +14,8 @@ cd ./$dirname
 
 echo "$2" > freq.log
 echo "$4" > voltage.log
+echo "$6" > pd.log
+echo "$8" > cg.log
 
 for i in CGMiner_Debug.log
 do
@@ -42,10 +44,10 @@ do
 
     Result=Results_$dirname
 
-    paste -d, freq.log voltage.log $i.GHSmm $i.Temp $i.TMax $i.WU $i.GHSav $i.DH $i.Cout $i.V0 $i.Power ph.log > ${Result#.log}.csv
+    paste -d, freq.log voltage.log pd.log cg.log $i.GHSmm $i.Temp $i.TMax $i.WU $i.GHSav $i.DH $i.Cout $i.V0 $i.Power ph.log > ${Result#.log}.csv
     cat *.csv >> ../miner-result.csv
 
-    rm -rf $i.GHSmm $i.Temp $i.TMax $i.WU $i.GHSav $i.DH freq.log voltage.log $i.Cout $i.V0 ph.log
+    rm -rf $i.GHSmm $i.Temp $i.TMax $i.WU $i.GHSav $i.DH freq.log voltage.log pd.log cg.log $i.Cout $i.V0 ph.log
 
     cd ..
     mv ./$dirname ./result*

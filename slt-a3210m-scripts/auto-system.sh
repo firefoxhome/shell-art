@@ -1,10 +1,14 @@
 #!/bin/bash
 
 # Create result.csv
-echo "Freq,Voltage,GHSmm,Temp,TMax,WU,GHSav,DH,Cout,Vo,Power,Power/GHSav" > miner-result.csv
+echo "Freq,Voltage,PD,CG,GHSmm,Temp,TMax,WU,GHSav,DH,Cout,Vo,Power,Power/GHSav" > miner-result.csv
 
 # Get raspberry IP address
 IP=`cat ip-freq-voltlevel-devid.config | sed -n '2p' | awk '{ print $1 }'`
+tmp=`who | cut -f 1 -d: | awk '{ print $1 }'`
+name=`echo $tmp | awk '{ print $1 }'`
+echo $name
+ssh-keygen -f "/home/$name/.ssh/known_hosts" -R $IP
 ./scp-login.exp $IP 0
 sleep 3
 
