@@ -26,7 +26,7 @@ do
     fi
 
     # Download changelog
-    wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/changelog
+    wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/changelog -P /tmp/
     remote=`cat changelog | grep 'Version' | awk '{ print $2 }'`
 
     # Compare MM version
@@ -35,22 +35,22 @@ do
 	rm changelog
         continue
     else
-        wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/MM${type}.mcs
-        wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/md5sums
+        wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/MM${type}.mcs -P /tmp/
+        wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/md5sums -P /tmp/
     fi
 
     # MD5sum compare and upgrade mm firmware
+    cd /tmp
     ck_mm=`md5sum MM${type}.mcs`
     ck_md5=`cat md5sums | grep 'mcs'`
     if [ "$ck_mm" == "$ck_md5" ]; then
 	mv MM${type}.mcs mm.mcs
-	mv mm.mcs /tmp/
 	/usr/bin/mmupgrade
 	echo "upgrade $type firmware"
     fi
 
     # Delete download files
-    rm changelog md5sums /tmp/mm.mcs
+    rm /tmp/changelog /tmp/md5sums /tmp/mm.mcs
 done
 
 # Clear flag
