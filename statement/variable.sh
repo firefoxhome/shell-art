@@ -20,6 +20,7 @@ for file in $(ls); do echo ${file}; done
 # double quotation can output variable, but single quotation can not output
 double_q="hello ${name} \n"
 echo ${double_q}
+echo -e ${double_q}
 
 # string length
 echo ${#double_q}
