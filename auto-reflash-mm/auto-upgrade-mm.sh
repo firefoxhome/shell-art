@@ -4,7 +4,9 @@
 #
 
 mm821_flag=0
+mm831_flag=0
 mm841_flag=0
+mm851_flag=0
 
 for local in `cgminer-api estats | sed 's/DNA/\nDNA/g' | sed 's/\=Ver/\n\=Ver/g' | grep '\=Ver' | sed 's/\=Ver\[//g' | sed 's/\]//g'`
 do
@@ -16,10 +18,24 @@ do
 	else
 		continue
 	fi
+    elif [ $type == '831' ]; then
+        avalon_type=avalon831
+	if [ $mm831_flag -eq 0 ]; then
+		mm831_flag=1
+	else
+		continue
+	fi
     elif [ $type == '841' ]; then
         avalon_type=avalon841
 	if [ $mm841_flag -eq 0 ]; then
 		mm841_flag=1
+	else
+		continue
+	fi
+    elif [ $type == '851' ]; then
+        avalon_type=avalon851
+	if [ $mm851_flag -eq 0 ]; then
+		mm851_flag=1
 	else
 		continue
 	fi
@@ -52,7 +68,3 @@ do
     # Delete download files
     rm /tmp/changelog /tmp/md5sums /tmp/mm.mcs
 done
-
-# Clear flag
-mm821_flag=0
-mm841_flag=0
