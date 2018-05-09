@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# Judging if there is a new MM firmware.
+#
+
+for local in `cgminer-api estats | sed 's/DNA/\nDNA/g' | sed 's/\=Ver/\n\=Ver/g' | grep '\=Ver' | sed 's/\=Ver\[//g' | sed 's/\]//g'`
+do
+    type=`echo $local | cut -b 1-3`
+    if [ $type == '821' ]; then
+        avalon_type=avalon821
+    elif [ $type == '831' ]; then
+        avalon_type=avalon831
+    elif [ $type == '841' ]; then
+        avalon_type=avalon841
+    elif [ $type == '851' ]; then
+        avalon_type=avalon851
+    else
+        continue
+    fi
+
+    # Download changelog
+    wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/changelog -P /tmp/
+    remote=`cat changelog | grep 'Version' | awk '{ print $2 }'`
+
+    # Compare MM version
+    if [ $local != $remote ]; then
+        rm changelog
+        echo "1" >> mm_prompt_version
+        echo "${avalon_type}" >> mm_prompt_version
+        break
+    fi
+done
