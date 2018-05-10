@@ -18,6 +18,7 @@ ck_mm=`md5sum MM${type}.mcs`
 ck_md5=`cat md5sums | grep 'mcs'`
 if [ "$ck_mm" == "$ck_md5" ]; then
     mv MM${type}.mcs mm.mcs
+    echo "1" > download_mm_file
 else
     rm -f MM${type}.mcs md5sums
 fi
