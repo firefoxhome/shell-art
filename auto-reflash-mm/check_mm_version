@@ -19,7 +19,12 @@ do
     fi
 
     # Download changelog
-    wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/changelog -P /tmp/
+    timeout 100 wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/changelog -P ./
+    if [ "$?" != 0 ]; then
+	    rm changelog
+        continue
+    fi
+
     remote=`cat changelog | grep 'Version' | awk '{ print $2 }'`
 
     # Compare MM version
