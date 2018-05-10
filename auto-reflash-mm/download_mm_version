@@ -3,16 +3,14 @@
 # If it need update MM firmware version, it will download MM firmware version.
 #
 
+[ ! -e mm_prompt_version ] && exit
 avalon_type=`cat mm_prompt_version | grep 'avalon'`
+[ -z "${avalon_type}" ] && exit
 type=`echo ${avalon_type} | cut -b 7-`
 
-if [ -z "${avalon_type}" ]; then
-    echo "0" >> download_mcs
-fi
-
 # Download mcs file and md5sums file
-wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/MM${type}.mcs -P /tmp/
-wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/md5sums -P /tmp/
+timeout 300 wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/MM${type}.mcs -P /tmp/
+timeout 300 wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/md5sums -P /tmp/
 
 # MD5sum compare and upgrade mm firmware
 cd /tmp
@@ -20,8 +18,6 @@ ck_mm=`md5sum MM${type}.mcs`
 ck_md5=`cat md5sums | grep 'mcs'`
 if [ "$ck_mm" == "$ck_md5" ]; then
     mv MM${type}.mcs mm.mcs
-    echo "1" >> download_mcs
 else
     rm -f MM${type}.mcs md5sums
-    echo "0" >> download_mcs
 fi
