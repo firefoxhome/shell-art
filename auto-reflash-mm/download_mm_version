@@ -1,6 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 #
 # If it need update MM firmware version, it will download MM firmware version.
+#
+# /bin/bash timeout command
+# timeout 300 wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/MM${type}.mcs -P /tmp/
+# timeout 300 wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/md5sums -P /tmp/
 #
 
 [ ! -e change_mm_version ] && exit
@@ -8,15 +12,47 @@ avalon_type=`cat change_mm_version | grep 'avalon'`
 [ -z "${avalon_type}" ] && exit
 type=`echo ${avalon_type} | cut -b 7-`
 
-# Download mcs file and md5sums file
-timeout 300 wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/MM${type}.mcs -P /tmp/
-timeout 300 wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/md5sums -P /tmp/
+# Download MM.mcs
+flag=0
+timer=130
+while [ "${timer}" -gt 0 ]
+do
+    if [ "${flag}" -eq 0 ]; then
+        flag=1
+        wget -S https://canaan.io/downloads/software/${avalon_type}/mm/latest/MM{type}.mcs -P /tmp/ 2>mm.log &
+    fi
+    mm=`cat mm.log | grep '100\%' | sed 's/\ /\n/g' | grep '100\%'`
+    if [ "${mm}" = "100%" ]; then
+        break
+    fi
+    sleep 1
+    timer=`expr $timer - 1`
+    echo ${timer}
+done
+
+# Download md5sums
+flag=0
+timer=60
+while [ "${timer}" -gt 0 ]
+do
+    if [ "${flag}" -eq 0 ]; then
+        flag=1
+        wget -S https://canaan.io/downloads/software/${avalon_type}/mm/latest/md5sums -P /tmp/ 2>md5sums.log &
+    fi
+    md=`cat md5sums.log | grep '100\%' | sed 's/\ /\n/g' | grep '100\%'`
+    if [ "${md}" = "100%" ]; then
+        break
+    fi
+    sleep 1
+    timer=`expr $timer - 1`
+    echo ${timer}
+done
 
 # MD5sum compare and upgrade mm firmware
 cd /tmp
 ck_mm=`md5sum MM${type}.mcs`
 ck_md5=`cat md5sums | grep 'mcs'`
-if [ "$ck_mm" == "$ck_md5" ]; then
+if [ "$ck_mm" = "$ck_md5" ]; then
     mv MM${type}.mcs mm.mcs
     echo "1" > download_mm_file
 else
