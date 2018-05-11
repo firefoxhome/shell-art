@@ -30,8 +30,8 @@ do
     # Compare MM version
     if [ $local != $remote ]; then
         rm changelog
-        echo "1" >> mm_prompt_version
-        echo "${avalon_type}" >> mm_prompt_version
+        echo "1" >> change_mm_version
+        echo "${avalon_type}" >> change_mm_version
         break
     fi
 done

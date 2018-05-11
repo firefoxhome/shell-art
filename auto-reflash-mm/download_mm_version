@@ -3,8 +3,8 @@
 # If it need update MM firmware version, it will download MM firmware version.
 #
 
-[ ! -e mm_prompt_version ] && exit
-avalon_type=`cat mm_prompt_version | grep 'avalon'`
+[ ! -e change_mm_version ] && exit
+avalon_type=`cat change_mm_version | grep 'avalon'`
 [ -z "${avalon_type}" ] && exit
 type=`echo ${avalon_type} | cut -b 7-`
 
