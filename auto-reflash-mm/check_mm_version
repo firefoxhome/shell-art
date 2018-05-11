@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Judging if there is a new MM firmware.
 #
@@ -19,11 +19,21 @@ do
     fi
 
     # Download changelog
-    timeout 100 wget https://canaan.io/downloads/software/${avalon_type}/mm/latest/changelog -P ./
-    if [ "$?" != 0 ]; then
-	    rm changelog
-        continue
-    fi
+    flag=0
+    timer=60
+    while [ "${timer}" -gt 0 ]
+    do
+        if [ "${flag}" -eq 0 ]; then
+            flag=1
+            wget -S https://canaan.io/downloads/software/${avalon_type}/mm/latest/changelog -P ./ 2>change &
+        fi
+        md=`cat change | grep '100\%' | sed 's/\ /\n/g' | grep '100\%'`
+        if [ "${md}" = "100%" ]; then
+            break
+        fi
+        sleep 1
+        timer=`expr $timer - 1`
+    done
 
     remote=`cat changelog | grep 'Version' | awk '{ print $2 }'`
 
