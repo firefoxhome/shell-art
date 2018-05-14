@@ -19,7 +19,7 @@ while [ "${timer}" -gt 0 ]
 do
     if [ "${flag}" -eq 0 ]; then
         flag=1
-        wget -S https://canaan.io/downloads/software/${avalon_type}/mm/latest/MM{type}.mcs -P /tmp/ 2>mm.log &
+        wget -S https://canaan.io/downloads/software/${avalon_type}/mm/latest/MM${type}.mcs -P /tmp/ 2>mm.log &
     fi
     mm=`cat mm.log | grep '100\%' | sed 's/\ /\n/g' | grep '100\%'`
     if [ "${mm}" = "100%" ]; then
@@ -27,7 +27,6 @@ do
     fi
     sleep 1
     timer=`expr $timer - 1`
-    echo ${timer}
 done
 
 # Download md5sums
@@ -45,7 +44,6 @@ do
     fi
     sleep 1
     timer=`expr $timer - 1`
-    echo ${timer}
 done
 
 # MD5sum compare and upgrade mm firmware
