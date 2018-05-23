@@ -46,3 +46,6 @@ sed -n '1, 2 w output' file_name
 
 # replace next line, using n
 sed '/^$/{n;s/line/word/g}' file_name
+
+# insert string to in the file of first line
+sed '1 i $var' file_name
