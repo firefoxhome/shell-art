@@ -2,10 +2,15 @@
 
 cnt=2
 
-str=`sed -n "${cnt}p" test`
-array=(${str//,/ })
+str=$@
 
-echo ${array[0]}
+# First split way, if there are null strings that it will faild
+#array=(${str//,/ })
+
+# Second split way
+array=`echo $str | cut -d \, -f 7`
+
+echo ${array}
 
 for i in ${array[@]}
 do
