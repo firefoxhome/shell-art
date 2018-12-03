@@ -2,9 +2,14 @@
 
 count=1
 
+echo "------------------------------ Running ------------------------------"
+
 while true
 do
+    sleep 300
+
     ./ssh-debuglog.py $1 > debuglog-${count}
-    sleep 10
+    echo "------------------------------ debuglog-${count} ------------------------------"
+
     let count=count+1
 done
